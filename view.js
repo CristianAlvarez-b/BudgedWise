@@ -15,18 +15,18 @@ class FinancialView {
 
         movements.forEach(movement => {
             const row = document.createElement('tr');
-            const icon = movement.type === 'income' ? '⬆️' : '⬇️'; // Cambia esto a los iconos que prefieras
+            const icon = movement.type === 'income' ? '⬆️' : '⬇️'; // Iconos para income y outcome
             const iconColor = movement.type === 'income' ? 'green' : 'orange';
 
             row.innerHTML = `
-                <td style="color: ${iconColor};">${icon}</td>
+                <td style="color: ${iconColor}; font-size: 20px;">${icon}</td> <!-- Icono con color y tamaño -->
                 <td>${movement.name}</td>
                 <td>$${movement.value.toLocaleString()}</td>
                 <td>$${movement.remaining.toLocaleString()}</td>
                 <td>${movement.date}</td>
                 <td>
-                    <button class="edit-btn">✏️</button>
-                    <button class="delete-btn">🗑️</button>
+                    <button class="edit-btn" style="background: none; border: none; cursor: pointer;">✏️</button> <!-- Botón Editar -->
+                    <button class="delete-btn" style="background: none; border: none; cursor: pointer;">🗑️</button> <!-- Botón Eliminar -->
                 </td>
             `;
             this.movementsTableBody.appendChild(row);

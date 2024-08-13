@@ -1,0 +1,217 @@
+/* Define las fuentes usando @font-face */
+@font-face {
+    font-family: 'NowAlt';
+    src: url('now/NowAlt-Black.otf') format('opentype'),
+         url('now/NowAlt-Bold.otf') format('opentype'),
+         url('now/NowAlt-Light.otf') format('opentype'),
+         url('now/NowAlt-Medium.otf') format('opentype'),
+         url('now/NowAlt-Regular.otf') format('opentype'),
+         url('now/NowAlt-Thin.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Now';
+    src: url('now/Now-Black.otf') format('opentype'),
+         url('now/Now-Bold.off') format('opentype'),
+         url('now/Now-Light.otf') format('opentype'),
+         url('now/Now-Medium.otf') format('opentype'),
+         url('now/Now-Regular.otf') format('opentype'),
+         url('now/Now-Thin.off') format('opentype');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Now', sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 150px;
+    height: 100vh;
+    background-color: #1b1b1b;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.logo {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 58px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #549672;
+    width: 62px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Now-Bold', sans-serif;
+}
+
+.nav-menu {
+    list-style: none;
+    width: 100%;
+}
+
+.nav-menu li {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.nav-menu li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    padding: 30px;
+    font-family: 'Now-Regular', sans-serif;
+}
+
+.nav-menu li a:hover {
+    background-color: #444;
+}
+
+/* Contenido principal */
+.main-content {
+    margin-left: 170px;
+    padding: 50px;
+}
+
+.main-content h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.amount-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+.amount {
+    background-color: #e0f7fa;
+}
+.amount-section .amount h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-right: 80px;
+}
+
+.btn-add-Income {
+    background-color: #b0d0c1;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 150px;
+}
+
+.btn-add-Income:hover {
+    background-color: #b0d0c1;
+}
+.btn-add-Outcome {
+    background-color: #fdd7a0;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 150px;
+}
+
+.btn-add-Outcome:hover {
+    background-color: #fdd7a0;
+}
+
+/* Tabla de movimientos */
+.movements-section {
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.movements-section h2 {
+    font-size: 23px;
+    padding-left: 15px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.movements-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.movements-table th, .movements-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.movements-table th {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.movements-table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+/* styles.css */
+
+.edit-btn,
+.delete-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.edit-btn img,
+.delete-btn img {
+    width: 40px; /* Ajusta el tamaño según sea necesario */
+    height: 40px; /* Ajusta el tamaño según sea necesario */
+    display: block;
+}
+
+.main-content h2 {
+    font-size: 23px;
+    padding-left: 15px;
+    color: #000000;
+    padding-top: 12px;
+}
+
+
+.btn-amount {
+    font-weight: bold;
+    font-size: 18px;
+    background-image: url('Imagenes/balance.png'); 
+    background-size: cover;
+    padding: 22px 24px;
+    text-align: center;
+    display: flex;
+    border: none;
+    border-radius: 10px;
+    width: 330px;
+    height: 120px;
+}
+
