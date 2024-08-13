@@ -1,23 +1,49 @@
-/* Define las fuentes usando @font-face */
 @font-face {
-    font-family: 'NowAlt';
-    src: url('now/NowAlt-Black.otf') format('opentype'),
-         url('now/NowAlt-Bold.otf') format('opentype'),
-         url('now/NowAlt-Light.otf') format('opentype'),
-         url('now/NowAlt-Medium.otf') format('opentype'),
-         url('now/NowAlt-Regular.otf') format('opentype'),
-         url('now/NowAlt-Thin.otf') format('opentype');
+    font-family: 'NowAlt-Black';
+    src: url('now/NowAlt-Black.otf') format('opentype');   
+}
+@font-face {
+    font-family: 'NowAlt-Bold';
+    src: url('now/NowAlt-Bold.otf') format('opentype');     
+}
+@font-face {
+    font-family: 'NowAlt-Light';
+    src: url('now/NowAlt-Light.otf') format('opentype');     
+}
+@font-face {
+    font-family: 'NowAlt-Medium';
+    src: url('now/NowAlt-Medium.otf') format('opentype');   
+}
+@font-face {
+    font-family: 'NowAlt-Regular';
+    src: url('now/NowAlt-Regular.otf') format('opentype');     
+}
+@font-face {
+    font-family: 'NowAlt-Thin';
+    src: url('now/NowAlt-Thin.otf') format('opentype');   
+}
+@font-face {
+    font-family: 'Now-Bold';
+    src: url('now/Now-Bold.otf') format('opentype');     
+}
+@font-face {
+    font-family: 'Now-Light';
+    src: url('now/Now-Light.otf') format('opentype');     
+}
+@font-face {
+    font-family: 'Now-Medium';
+    src: url('now/Now-Medium.otf') format('opentype');   
+}
+@font-face {
+    font-family: 'Now-Regular';
+    src: url('now/Now-Regular.otf') format('opentype');     
 }
 
 @font-face {
-    font-family: 'Now';
-    src: url('now/Now-Black.otf') format('opentype'),
-         url('now/Now-Bold.off') format('opentype'),
-         url('now/Now-Light.otf') format('opentype'),
-         url('now/Now-Medium.otf') format('opentype'),
-         url('now/Now-Regular.otf') format('opentype'),
-         url('now/Now-Thin.off') format('opentype');
+    font-family: 'Now-Thin';
+    src: url('now/Now-Thin.otf') format('opentype');   
 }
+
 
 * {
     margin: 0;
@@ -26,13 +52,13 @@
 }
 
 body {
-    font-family: 'Now', sans-serif;
+    font-family: 'NowAlt-Bold', sans-serif;
     background-color: #f5f5f5;
 }
 
 /* Barra lateral */
 .sidebar {
-    width: 150px;
+    width: 220px;
     height: 100vh;
     background-color: #1b1b1b;
     position: fixed;
@@ -40,6 +66,17 @@ body {
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+}
+
+.sidebar-border {
+    width: 30px; 
+    height: 100vh; 
+    background-color: #f5f5f5; 
+    position: fixed;
+    left: 190px; 
+    top: 0;
+    border-radius: 50px 0px 0px 50px;
+    z-index: 1; 
 }
 
 .logo {
@@ -55,7 +92,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Now-Bold', sans-serif;
+    
 }
 
 .nav-menu {
@@ -84,7 +121,7 @@ body {
 
 /* Contenido principal */
 .main-content {
-    margin-left: 170px;
+    margin-left: 220px;
     padding: 50px;
 }
 
