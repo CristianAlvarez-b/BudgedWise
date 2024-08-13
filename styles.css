@@ -1,0 +1,129 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #333;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.logo {
+    background-color: #ffffff;
+    border-radius: 50%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-menu {
+    list-style: none;
+    width: 100%;
+}
+
+.nav-menu li {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.nav-menu li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+}
+
+.nav-menu li a:hover {
+    background-color: #444;
+}
+
+/* Contenido principal */
+.main-content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+.main-content h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.amount-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e0f7fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.amount-section .amount h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-add {
+    background-color: #b2dfdb;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-add:hover {
+    background-color: #80cbc4;
+}
+
+/* Tabla de movimientos */
+.movements-section {
+    margin-top: 30px;
+}
+
+.movements-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.movements-table th, .movements-table td {
+    padding: 10px;
+    text-align: left;
+}
+
+.movements-table th {
+    background-color: #eeeeee;
+    color: #333;
+}
+
+.movements-table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}

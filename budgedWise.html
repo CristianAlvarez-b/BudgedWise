@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Finanzas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span>BW</span>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#">🏠</a></li>
+            <li><a href="#">💰</a></li>
+            <li><a href="#">📊</a></li>
+            <li><a href="#">👤</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>Overview</h1>
+        <div class="amount-section">
+            <div class="amount">
+                <h2>$2'400.000 COP</h2>
+            </div>
+            <div class="buttons">
+                <button class="btn-add">Add Incomes</button>
+                <button class="btn-add">Add Outcomes</button>
+            </div>
+        </div>
+
+        <div class="movements-section">
+            <h2>Movements</h2>
+            <table class="movements-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th>Remaining</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Salario</td>
+                        <td>$1'400.000</td>
+                        <td>$2'400.000</td>
+                        <td>25/07/24</td>
+                    </tr>
+                    <tr>
+                        <td>CDT</td>
+                        <td>$500.000</td>
+                        <td>$1'000.000</td>
+                        <td>20/07/24</td>
+                    </tr>
+                    <tr>
+                        <td>Servicio Luz</td>
+                        <td>$200.000</td>
+                        <td>$500.000</td>
+                        <td>15/07/24</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module" src="js/controller.js"></script>
+</body>
+</html>
