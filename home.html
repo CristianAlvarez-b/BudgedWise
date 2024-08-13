@@ -26,18 +26,40 @@
         <h2>Amount</h2>
         <div class="amount-section">
             <div class="amount">
-                <button class="btn-amount">$2'400.000 COP</button>
+                <button class="btn-amount">$0 COP</button> <!-- Asegúrate de que este selector sea correcto -->
             </div>
+            
             <div class="buttons">
-                <button class="btn-add-Income">Add <br> Incomes</button>
-                <button class="btn-add-Outcome">Add <br> Outcomes</button>
+                <button class="btn-add-income">Add <br> Incomes</button> <!-- Clase corregida -->
+                <button class="btn-add-expense">Add <br> Outcomes</button> <!-- Clase corregida -->
             </div>
         </div>
-
+        <div class="form-section">
+            <!-- Formulario para Incomes -->
+            <form id="income-form" style="display:none;">
+                <label for="income-name">Income Name:</label>
+                <input type="text" id="income-name" required>
+                <label for="income-value">Income Value:</label>
+                <input type="number" id="income-value" required>
+                <label for="income-date">Income Date:</label>
+                <input type="date" id="income-date" required>
+                <button type="submit">Add Income</button>
+            </form>
+        
+            <!-- Formulario para Outcomes -->
+            <form id="expense-form" style="display:none;">
+                <label for="expense-name">Expense Name:</label>
+                <input type="text" id="expense-name" required>
+                <label for="expense-value">Expense Value:</label>
+                <input type="number" id="expense-value" required>
+                <label for="expense-date">Expense Date:</label>
+                <input type="date" id="expense-date" required>
+                <button type="submit">Add Expense</button>
+            </form>
+        </div>
+        
         <div class="movements-section">
             <h2>Movements</h2>
-        
-    
             <table class="movements-table">
                 <thead>
                     <tr>
@@ -49,44 +71,12 @@
                         <th></th> <!-- Columna para las acciones -->
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><img src="imagenes/arriba.png" alt="Ingreso"></td>
-                        <td>Salario</td>
-                        <td>$1'400.000</td>
-                        <td>$2'400.000</td>
-                        <td>25/07/24</td>
-                        <td>
-                            <button class="edit-btn"><img src="imagenes/editar.png" alt="Editar"></button>
-                            <button class="delete-btn"><img src="imagenes/eliminar.png" alt="Eliminar"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="imagenes/arriba.png" alt="Ingreso"></td>
-                        <td>CDT</td>
-                        <td>$500.000</td>
-                        <td>$1'000.000</td>
-                        <td>20/07/24</td>
-                        <td>
-                            <button class="edit-btn"><img src="imagenes/editar.png" alt="Editar"></button>
-                            <button class="delete-btn"><img src="imagenes/eliminar.png" alt="Eliminar"></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="imagenes/abajo.png" alt="Egreso"></td>
-                        <td>Servicio Luz</td>
-                        <td>$200.000</td>
-                        <td>$500.000</td>
-                        <td>15/07/24</td>
-                        <td>
-                            <button class="edit-btn"><img src="imagenes/editar.png" alt="Editar"></button>
-                            <button class="delete-btn"><img src="imagenes/eliminar.png" alt="Eliminar"></button>
-                        </td>
-                    </tr>
+                <tbody id="movements-table-body">
+                    <!-- Aquí se agregarán dinámicamente las filas de movimientos -->
                 </tbody>
             </table>
         </div>
     </div>
-    <script type="module" src="js/controller.js"></script>
 </body>
+<script type="module" src="./js/controller.js" defer></script>
 </html>

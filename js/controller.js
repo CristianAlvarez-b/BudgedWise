@@ -1,5 +1,3 @@
-// controller.js
-
 import FinancialModel from './model.js';
 import FinancialView from './view.js';
 
@@ -16,24 +14,40 @@ class FinancialController {
 
     initEventListeners() {
         document.querySelector('.btn-add-income').addEventListener('click', () => {
-            const name = prompt("Enter income name:");
-            const value = parseFloat(prompt("Enter income value:"));
-            const date = prompt("Enter income date:");
+            document.getElementById('income-form').style.display = 'block';
+            document.getElementById('expense-form').style.display = 'none';
+        });
+
+        document.querySelector('.btn-add-expense').addEventListener('click', () => {
+            document.getElementById('expense-form').style.display = 'block';
+            document.getElementById('income-form').style.display = 'none';
+        });
+
+        document.getElementById('income-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = document.getElementById('income-name').value;
+            const value = parseFloat(document.getElementById('income-value').value);
+            const date = document.getElementById('income-date').value;
 
             if (name && !isNaN(value) && date) {
                 this.model.addIncome(name, value, date);
                 this.updateView();
+                document.getElementById('income-form').reset();
+                document.getElementById('income-form').style.display = 'none';
             }
         });
 
-        document.querySelector('.btn-add-expense').addEventListener('click', () => {
-            const name = prompt("Enter expense name:");
-            const value = parseFloat(prompt("Enter expense value:"));
-            const date = prompt("Enter expense date:");
+        document.getElementById('expense-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = document.getElementById('expense-name').value;
+            const value = parseFloat(document.getElementById('expense-value').value);
+            const date = document.getElementById('expense-date').value;
 
             if (name && !isNaN(value) && date) {
                 this.model.addExpense(name, value, date);
                 this.updateView();
+                document.getElementById('expense-form').reset();
+                document.getElementById('expense-form').style.display = 'none';
             }
         });
 
@@ -103,4 +117,4 @@ class FinancialController {
 }
 
 // Inicializar la aplicación
-const app = new FinancialController(new FinancialModel(), new FinancialView());
+new FinancialController(new FinancialModel(), new FinancialView());

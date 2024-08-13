@@ -1,8 +1,6 @@
-// view.js
-
 class FinancialView {
     constructor() {
-        this.amountElement = document.querySelector('.amount h2');
+        this.amountElement = document.querySelector('.btn-amount'); // Cambia esto según el selector correcto
         this.movementsTableBody = document.querySelector('.movements-table tbody');
     }
 
@@ -35,7 +33,7 @@ class FinancialView {
 
     setEditHandler(handler) {
         this.movementsTableBody.addEventListener('click', event => {
-            if (event.target.classList.contains('edit-btn')) {
+            if (event.target.closest('.edit-btn')) {
                 const rowIndex = Array.from(this.movementsTableBody.children).indexOf(event.target.closest('tr'));
                 handler(rowIndex);
             }
@@ -44,7 +42,7 @@ class FinancialView {
 
     setDeleteHandler(handler) {
         this.movementsTableBody.addEventListener('click', event => {
-            if (event.target.classList.contains('delete-btn')) {
+            if (event.target.closest('.delete-btn')) {
                 const rowIndex = Array.from(this.movementsTableBody.children).indexOf(event.target.closest('tr'));
                 handler(rowIndex);
             }

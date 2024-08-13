@@ -1,20 +1,21 @@
-// model.js
-
 class FinancialModel {
     constructor() {
-        this.incomes = [];
-        this.expenses = [];
+        this.incomes = JSON.parse(localStorage.getItem('incomes')) || [];
+        this.expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+        this.updateBalance();
     }
 
     addIncome(name, value, date) {
         const income = { name, value, date };
         this.incomes.push(income);
+        localStorage.setItem('incomes', JSON.stringify(this.incomes));
         this.updateBalance();
     }
 
     addExpense(name, value, date) {
         const expense = { name, value, date };
         this.expenses.push(expense);
+        localStorage.setItem('expenses', JSON.stringify(this.expenses));
         this.updateBalance();
     }
 

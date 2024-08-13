@@ -252,3 +252,40 @@ body {
     height: 120px;
 }
 
+.form-section {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #e0f7fa;
+}
+
+.form-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-section label {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-section input {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.form-section button {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #b0d0c1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-section button:hover {
+    background-color: #98c5a8;
+}
+
