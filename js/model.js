@@ -7,15 +7,15 @@ class FinancialModel {
 
     addIncome(name, value, date) {
         const income = { name, value, date };
-        this.incomes.push(income);
-        localStorage.setItem('incomes', JSON.stringify(this.incomes));
+        this.incomes.unshift(income);  // Agregar al principio del array
+        localStorage.setItem('incomes', JSON.stringify(this.incomes)); // Guardar en localStorage
         this.updateBalance();
     }
 
     addExpense(name, value, date) {
         const expense = { name, value, date };
-        this.expenses.push(expense);
-        localStorage.setItem('expenses', JSON.stringify(this.expenses));
+        this.expenses.unshift(expense);  // Agregar al principio del array
+        localStorage.setItem('expenses', JSON.stringify(this.expenses)); // Guardar en localStorage
         this.updateBalance();
     }
 
