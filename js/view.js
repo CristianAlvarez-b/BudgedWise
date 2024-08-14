@@ -41,19 +41,24 @@ class FinancialView {
         this.movementsTableBody.addEventListener('click', event => {
             if (event.target.closest('.edit-btn')) {
                 const rowIndex = Array.from(this.movementsTableBody.children).indexOf(event.target.closest('tr'));
-                handler(rowIndex);
+                // Calcular el índice real en el modelo
+                const realIndex = this.movementsTableBody.children.length - rowIndex - 1;
+                handler(realIndex);
             }
         });
     }
-
+    
     setDeleteHandler(handler) {
         this.movementsTableBody.addEventListener('click', event => {
             if (event.target.closest('.delete-btn')) {
                 const rowIndex = Array.from(this.movementsTableBody.children).indexOf(event.target.closest('tr'));
-                handler(rowIndex);
+                // Calcular el índice real en el modelo
+                const realIndex = this.movementsTableBody.children.length - rowIndex - 1;
+                handler(realIndex);
             }
         });
     }
+    
 }
 
 export default FinancialView;

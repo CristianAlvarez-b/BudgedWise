@@ -13,14 +13,29 @@ class FinancialController {
     }
 
     initEventListeners() {
+        const popup = document.getElementById('popup-form');
+        const closePopup = document.getElementById('close-popup');
+
         document.querySelector('.btn-add-income').addEventListener('click', () => {
             document.getElementById('income-form').style.display = 'block';
             document.getElementById('expense-form').style.display = 'none';
+            popup.style.display = 'block';
         });
 
         document.querySelector('.btn-add-expense').addEventListener('click', () => {
             document.getElementById('expense-form').style.display = 'block';
             document.getElementById('income-form').style.display = 'none';
+            popup.style.display = 'block';
+        });
+
+        closePopup.addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == popup) {
+                popup.style.display = 'none';
+            }
         });
 
         document.getElementById('income-form').addEventListener('submit', (event) => {
@@ -33,7 +48,7 @@ class FinancialController {
                 this.model.addIncome(name, value, date);
                 this.updateView();
                 document.getElementById('income-form').reset();
-                document.getElementById('income-form').style.display = 'none';
+                popup.style.display = 'none';
             }
         });
 
@@ -47,7 +62,7 @@ class FinancialController {
                 this.model.addExpense(name, value, date);
                 this.updateView();
                 document.getElementById('expense-form').reset();
-                document.getElementById('expense-form').style.display = 'none';
+                popup.style.display = 'none';
             }
         });
 
@@ -100,27 +115,27 @@ class FinancialController {
 
         // Calcular el índice real en la lista original según el tipo de movimiento
         if (movement.type === 'income') {
-            const incomeIndex = this.model.incomes.length - (index + 1); // Ajustar para la lista de ingresos
-            const newName = prompt("Edit name:", this.model.incomes[incomeIndex].name);
-            const newValue = parseFloat(prompt("Edit value:", this.model.incomes[incomeIndex].value));
-            const newDate = prompt("Edit date:", this.model.incomes[incomeIndex].date);
+            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
+            const newName = prompt("Edit name:", this.model.incomes[realIndex].name);
+            const newValue = parseFloat(prompt("Edit value:", this.model.incomes[realIndex].value));
+            const newDate = prompt("Edit date:", this.model.incomes[realIndex].date);
 
             if (newName && !isNaN(newValue) && newDate) {
-                this.model.incomes[incomeIndex].name = newName;
-                this.model.incomes[incomeIndex].value = newValue;
-                this.model.incomes[incomeIndex].date = newDate;
+                this.model.incomes[realIndex].name = newName;
+                this.model.incomes[realIndex].value = newValue;
+                this.model.incomes[realIndex].date = newDate;
                 localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
             }
         } else {
-            const expenseIndex = this.model.expenses.length - (index - (movements.length - this.model.expenses.length));
-            const newName = prompt("Edit name:", this.model.expenses[expenseIndex].name);
-            const newValue = parseFloat(prompt("Edit value:", this.model.expenses[expenseIndex].value));
-            const newDate = prompt("Edit date:", this.model.expenses[expenseIndex].date);
+            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
+            const newName = prompt("Edit name:", this.model.expenses[realIndex].name);
+            const newValue = parseFloat(prompt("Edit value:", this.model.expenses[realIndex].value));
+            const newDate = prompt("Edit date:", this.model.expenses[realIndex].date);
 
             if (newName && !isNaN(newValue) && newDate) {
-                this.model.expenses[expenseIndex].name = newName;
-                this.model.expenses[expenseIndex].value = newValue;
-                this.model.expenses[expenseIndex].date = newDate;
+                this.model.expenses[realIndex].name = newName;
+                this.model.expenses[realIndex].value = newValue;
+                this.model.expenses[realIndex].date = newDate;
                 localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
             }
         }
@@ -133,17 +148,18 @@ class FinancialController {
 
         // Calcular el índice real en la lista original según el tipo de movimiento
         if (movement.type === 'income') {
-            const incomeIndex = this.model.incomes.length - (index + 1); // Ajustar para la lista de ingresos
-            this.model.incomes.splice(incomeIndex, 1);
+            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
+            this.model.incomes.splice(realIndex, 1);
             localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
         } else {
-            const expenseIndex = this.model.expenses.length - (index - (movements.length - this.model.expenses.length));
-            this.model.expenses.splice(expenseIndex, 1);
+            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
+            this.model.expenses.splice(realIndex, 1);
             localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
         }
 
         this.updateView(); // Actualizar la vista con los cambios realizados
     }
+
 }
 
 // Inicializar la aplicación
