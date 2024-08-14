@@ -56,63 +56,93 @@ class FinancialController {
     }
 
     updateView() {
+        this.model.updateBalance(); // Asegura que el balance se actualice en el modelo
         this.view.updateBalance(this.model.balance);
         this.view.updateMovements(this.getMovements());
     }
 
     getMovements() {
-        const incomes = this.model.incomes.map(income => ({
-            name: income.name,
-            value: income.value,
-            remaining: this.model.balance,
-            date: income.date,
-            type: 'income'
-        }));
+        let runningBalance = 0;
+        const movements = [];
 
-        const expenses = this.model.expenses.map(expense => ({
-            name: expense.name,
-            value: expense.value,
-            remaining: this.model.balance,
-            date: expense.date,
-            type: 'expense'
-        }));
+        // Procesar ingresos en orden inverso
+        for (let i = this.model.incomes.length - 1; i >= 0; i--) {
+            const income = this.model.incomes[i];
+            runningBalance += income.value;
+            movements.push({
+                name: income.name,
+                value: income.value,
+                remaining: runningBalance,
+                date: income.date,
+                type: 'income'
+            });
+        }
 
-        return [...incomes, ...expenses];
+        // Procesar egresos en orden inverso
+        for (let i = this.model.expenses.length - 1; i >= 0; i--) {
+            const expense = this.model.expenses[i];
+            runningBalance -= expense.value;
+            movements.push({
+                name: expense.name,
+                value: expense.value,
+                remaining: runningBalance,
+                date: expense.date,
+                type: 'expense'
+            });
+        }
+
+        return movements; // No es necesario invertir ya que procesamos en orden inverso
     }
 
     editMovement(index) {
-        const movements = this.getMovements();
+        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
         const movement = movements[index];
 
-        const newName = prompt("Edit name:", movement.name);
-        const newValue = parseFloat(prompt("Edit value:", movement.value));
-        const newDate = prompt("Edit date:", movement.date);
+        // Calcular el índice real en la lista original según el tipo de movimiento
+        if (movement.type === 'income') {
+            const incomeIndex = this.model.incomes.length - (index + 1); // Ajustar para la lista de ingresos
+            const newName = prompt("Edit name:", this.model.incomes[incomeIndex].name);
+            const newValue = parseFloat(prompt("Edit value:", this.model.incomes[incomeIndex].value));
+            const newDate = prompt("Edit date:", this.model.incomes[incomeIndex].date);
 
-        if (newName && !isNaN(newValue) && newDate) {
-            if (movement.type === 'income') {
-                this.model.incomes[index].name = newName;
-                this.model.incomes[index].value = newValue;
-                this.model.incomes[index].date = newDate;
-            } else {
-                this.model.expenses[index - this.model.incomes.length].name = newName;
-                this.model.expenses[index - this.model.incomes.length].value = newValue;
-                this.model.expenses[index - this.model.incomes.length].date = newDate;
+            if (newName && !isNaN(newValue) && newDate) {
+                this.model.incomes[incomeIndex].name = newName;
+                this.model.incomes[incomeIndex].value = newValue;
+                this.model.incomes[incomeIndex].date = newDate;
+                localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
             }
-            this.updateView();
+        } else {
+            const expenseIndex = this.model.expenses.length - (index - (movements.length - this.model.expenses.length));
+            const newName = prompt("Edit name:", this.model.expenses[expenseIndex].name);
+            const newValue = parseFloat(prompt("Edit value:", this.model.expenses[expenseIndex].value));
+            const newDate = prompt("Edit date:", this.model.expenses[expenseIndex].date);
+
+            if (newName && !isNaN(newValue) && newDate) {
+                this.model.expenses[expenseIndex].name = newName;
+                this.model.expenses[expenseIndex].value = newValue;
+                this.model.expenses[expenseIndex].date = newDate;
+                localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+            }
         }
+        this.updateView(); // Actualizar la vista con los cambios realizados
     }
 
     deleteMovement(index) {
-        const movements = this.getMovements();
+        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
         const movement = movements[index];
 
+        // Calcular el índice real en la lista original según el tipo de movimiento
         if (movement.type === 'income') {
-            this.model.incomes.splice(index, 1);
+            const incomeIndex = this.model.incomes.length - (index + 1); // Ajustar para la lista de ingresos
+            this.model.incomes.splice(incomeIndex, 1);
+            localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
         } else {
-            this.model.expenses.splice(index - this.model.incomes.length, 1);
+            const expenseIndex = this.model.expenses.length - (index - (movements.length - this.model.expenses.length));
+            this.model.expenses.splice(expenseIndex, 1);
+            localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
         }
 
-        this.updateView();
+        this.updateView(); // Actualizar la vista con los cambios realizados
     }
 }
 

@@ -1,6 +1,6 @@
 class FinancialView {
     constructor() {
-        this.amountElement = document.querySelector('.btn-amount'); // Cambia esto según el selector correcto
+        this.amountElement = document.querySelector('.btn-amount');
         this.movementsTableBody = document.querySelector('.movements-table tbody');
     }
 
@@ -13,21 +13,27 @@ class FinancialView {
 
         movements.forEach(movement => {
             const row = document.createElement('tr');
-            const icon = movement.type === 'income' ? '⬆️' : '⬇️'; // Iconos para income y outcome
-            const iconColor = movement.type === 'income' ? 'green' : 'orange';
+            const iconSrc = movement.type === 'income' ? 'Imagenes/arriba.png' : 'Imagenes/abajo.png'; // Ruta de las imágenes
+            const iconAlt = movement.type === 'income' ? 'Ingreso' : 'Egreso';
 
             row.innerHTML = `
-                <td style="color: ${iconColor}; font-size: 20px;">${icon}</td> <!-- Icono con color y tamaño -->
+                <td class="icon-cell">
+                    <img src="${iconSrc}" alt="${iconAlt}" class="icon-img">
+                </td>
                 <td>${movement.name}</td>
                 <td>$${movement.value.toLocaleString()}</td>
                 <td>$${movement.remaining.toLocaleString()}</td>
                 <td>${movement.date}</td>
-                <td>
-                    <button class="edit-btn" style="background: none; border: none; cursor: pointer;">✏️</button> <!-- Botón Editar -->
-                    <button class="delete-btn" style="background: none; border: none; cursor: pointer;">🗑️</button> <!-- Botón Eliminar -->
+                <td class="action-cell">
+                    <button class="edit-btn action-btn">
+                        <img src="Imagenes/editar.png" alt="Editar" class="action-img">
+                    </button>
+                    <button class="delete-btn action-btn">
+                        <img src="Imagenes/eliminar.png" alt="Eliminar" class="action-img">
+                    </button>
                 </td>
             `;
-            this.movementsTableBody.appendChild(row);
+            this.movementsTableBody.prepend(row); // Insertar al principio para que aparezca primero
         });
     }
 
