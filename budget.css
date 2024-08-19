@@ -95,12 +95,14 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 28px;
+    font-family: 'Now-Bold'
     
 }
 
 .nav-menu {
     list-style: none;
     width: 100%;
+    margin-top: 22px;
 }
 
 .nav-menu li {
@@ -136,7 +138,7 @@ body {
 
 .main-content h1 {
     font-size: 36px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .amount-section {
@@ -155,18 +157,20 @@ body {
     border-radius: 10px;
 }
 .amount-section .amount h2 {
-    font-size: 28px;
+    font-size: 23px;
     color: #333;
+    text-align: center;
 }
 .amount-section .Budgeting h2{
-    font-size: 28px;
+    font-size: 23px;
     color: #333;
+    text-align: center;
 
 }
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 35px;
 }
 .div_buttons {
     display: flex;
@@ -190,6 +194,7 @@ body {
     font-weight: bold;
     width: 25px;
     height: 26px;
+    margin-top: 5px;
 }
 
 .btn-add-income:hover {
@@ -205,6 +210,7 @@ body {
     font-weight: bold;
     width: 25px;
     height: 26px;
+    margin-top: 5px;
 }
 
 .btn-add-expense:hover {
@@ -268,8 +274,7 @@ body {
 
 
 .btn-amount {
-    font-weight: bold;
-    font-size: 25px;
+    font-size: 23px;
     background-color: #cfeee0;
     background-size: cover;
     text-align: center;
@@ -280,10 +285,12 @@ body {
     height: 90px;
     align-items: center;
     justify-content: center;
+    margin-top: 15px;
+    color: #1b1b1b;
+    font-family: 'Now-Bold'
 }
 .btn-budget {
-    font-weight: bold;
-    font-size: 25px;
+    font-size: 23px;
     background-color: #f7d6af;
     background-size: cover;
     text-align: center;
@@ -294,6 +301,9 @@ body {
     height: 90px; 
     align-items: center;
     justify-content: center;
+    margin-top: 15px;
+    color: #1b1b1b;
+    font-family: 'Now-Bold'
 }
 .fantasma {
     width: 330px;
@@ -323,21 +333,23 @@ form input[type="date"] {
 
 form button[type="submit_outcome"] {
     padding: 12px;
-    background-color: #fdd7a0;
+    background-color: #eba646;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
+    align-self: center;
+    width: 45%;
 }
 
 form button[type="submit_outcome"]:hover {
-    background-color: #fdd7a0;
+    background-color: #e79e37;
 }
 form button[type="submit_income"] {
     padding: 12px;
-    background-color: #b0d0c1;
+    background-color: #4cb182;
     color: white;
     border: none;
     border-radius: 5px;
@@ -349,7 +361,7 @@ form button[type="submit_income"] {
 }
 
 form button[type="submit_income"]:hover {
-    background-color: #45a049;
+    background-color: #3ba071;
     
 }
 

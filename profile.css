@@ -95,12 +95,14 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 28px;
+    font-family: 'Now-Bold'
     
 }
 
 .nav-menu {
     list-style: none;
     width: 100%;
+    margin-top: 22px;
 }
 
 .nav-menu li {
@@ -160,26 +162,35 @@ body {
     justify-content: center;
 }
 .informationProfile h1{
-    font-size: 30px;
+    margin-top: 19px;
+    font-size: 27px;
     align-items: center;
 }
 .informationProfile p{
-    font-size: 24px;
+    font-size: 21px;
     color: #444;
-    line-height: 1.7;
+    line-height: 1.8;
 }
 .configurationProfile{
     display: flex;
     flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
 }
 .configurationProfile h1{
-    font-size: 30px;
+    font-size: 22px;
     margin-bottom: 0px
 }
 .configurationProfile hr {
     margin-right: 40%;
-    height: 3px;
+    height: 2px;
     background-color: #1b1b1b;
     margin-bottom: 30px;
     margin-top: 30px;
+}
+
+.imageProfile img {
+    width: 258px; /* Ajusta el tamaño según lo que necesites */
+    height: 250px;
+    border-radius: 14%; /* Esto hará que la imagen sea circular */
+    margin-left: 20px;
+
 }

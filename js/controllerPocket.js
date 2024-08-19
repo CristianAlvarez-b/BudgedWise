@@ -37,12 +37,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         pocketDiv.querySelector('.delete-pocket-btn').addEventListener('click', (e) => {
             e.stopPropagation();
-            if (confirm('Are you sure you want to delete this pocket?')) {
-                const pocketName = pocketDiv.querySelector('span').textContent;
-                pocketModel.pockets = pocketModel.pockets.filter(pocket => pocket.name !== pocketName);
-                pocketDiv.remove();
-                localStorage.setItem('pockets', JSON.stringify(pocketModel.getPockets()));
-            }
+        
+            // Mostrar la alerta de confirmación usando SweetAlert
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to delete this pocket?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const pocketName = pocketDiv.querySelector('span').textContent;
+                    const pocketValue = parseInt(pocketDiv.querySelector('.pocket-value').textContent.replace(/[^\d]/g, ''), 10); // Extraer el valor numérico
+        
+                    // Eliminar el bolsillo
+                    pocketModel.pockets = pocketModel.pockets.filter(pocket => pocket.name !== pocketName);
+                    pocketDiv.remove();
+        
+                    // Actualizar el balance sumando el valor del bolsillo eliminado
+                    storedBalance += pocketValue;
+                    amountElement.textContent = `$${new Intl.NumberFormat().format(storedBalance)} COP`;
+                    localStorage.setItem('balance', storedBalance);
+        
+                    // Añadir el movimiento de income
+                    addIncomeToLocalStorage(pocketName, pocketValue);
+        
+                    // Actualizar localStorage con los bolsillos restantes
+                    localStorage.setItem('pockets', JSON.stringify(pocketModel.getPockets()));
+        
+                    // Mostrar mensaje de éxito
+                    Swal.fire(
+                        'Deleted!',
+                        'The pocket has been deleted.',
+                        'success'
+                    );
+                }
+            });
         });
 
         pocketsSection.insertBefore(pocketDiv, addPocketBtn);
@@ -86,6 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editingPocket) {
             const pocketIndex = pocketModel.pockets.findIndex(p => p.name === editingPocket.querySelector('span').textContent);
             if (pocketIndex > -1) {
+                const oldValue = pocketModel.pockets[pocketIndex].value;
+                const difference = value - oldValue;
+
                 pocketModel.pockets[pocketIndex].name = name;
                 pocketModel.pockets[pocketIndex].value = value;
                 pocketModel.pockets[pocketIndex].color = color;
@@ -95,6 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 editingPocket.style.backgroundColor = color;
 
                 localStorage.setItem('pockets', JSON.stringify(pocketModel.getPockets()));
+
+                // Actualizar el balance según la diferencia
+                storedBalance -= difference;
+                amountElement.textContent = `$${new Intl.NumberFormat().format(storedBalance)} COP`;
+                localStorage.setItem('balance', storedBalance);
+
+                // Generar movimiento según la diferencia
+                if (difference > 0) {
+                    addOutcomeToLocalStorage(name, difference);
+                } else if (difference < 0) {
+                    addIncomeToLocalStorage(name, Math.abs(difference));
+                }
             }
 
         } else {
@@ -120,9 +168,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function addOutcomeToLocalStorage(name, value) {
         const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
         const date = getLocalDate();
-        const outcome = { name, value, date, type: 'expense' };
+        const outcome = { name, value, date, type: 'pocketOutcome' };
         expenses.unshift(outcome);
         localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    // Función para agregar el movimiento de income al localStorage
+    function addIncomeToLocalStorage(name, value) {
+        const incomes = JSON.parse(localStorage.getItem('incomes')) || [];
+        const date = getLocalDate();
+        const income = { name, value, date, type: 'pocketIncome' };
+        incomes.unshift(income);
+        localStorage.setItem('incomes', JSON.stringify(incomes));
     }
 
     // Función para obtener la fecha local en formato YYYY-MM-DD
@@ -131,7 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados, así que agregamos 1
         const day = String(date.getDate()).padStart(2, '0');
-    
-        return `${year}-${month}-${day}`;
+
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        // Combinar la fecha y la hora
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 });

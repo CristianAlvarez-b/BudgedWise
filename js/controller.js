@@ -5,6 +5,7 @@ class FinancialController {
     constructor(model, view) {
         this.model = model;
         this.view = view;
+        this.editingIndex = null; // Para rastrear el índice del movimiento que se está editando
 
         this.view.updateBalance(this.model.balance);
         this.view.updateMovements(this.getMovements());
@@ -18,15 +19,11 @@ class FinancialController {
         const closePopup = document.getElementById('close-popup');
 
         document.querySelector('.btn-add-income').addEventListener('click', () => {
-            document.getElementById('income-form').style.display = 'flex';
-            document.getElementById('expense-form').style.display = 'none';
-            popup.style.display = 'block';
+            this.showForm('income');
         });
 
         document.querySelector('.btn-add-expense').addEventListener('click', () => {
-            document.getElementById('expense-form').style.display = 'flex';
-            document.getElementById('income-form').style.display = 'none';
-            popup.style.display = 'block';
+            this.showForm('expense');
         });
 
         closePopup.addEventListener('click', () => {
@@ -34,7 +31,7 @@ class FinancialController {
         });
 
         window.addEventListener('click', (event) => {
-            if (event.target == popup) {
+            if (event.target === popup) {
                 popup.style.display = 'none';
             }
         });
@@ -44,12 +41,15 @@ class FinancialController {
             const name = document.getElementById('income-name').value;
             const value = parseFloat(document.getElementById('income-value').value);
             const date = document.getElementById('income-date').value;
-
+        
             if (name && !isNaN(value) && date) {
-                this.model.addIncome(name, value, date);
+                if (this.editingIndex !== null) {
+                    this.updateMovement('income', name, value, date);
+                } else {
+                    this.model.addIncome(name, value, date);
+                }
                 this.updateView();
-                document.getElementById('income-form').reset();
-                popup.style.display = 'none';
+                this.hideForm();
             }
         });
 
@@ -58,12 +58,15 @@ class FinancialController {
             const name = document.getElementById('expense-name').value;
             const value = parseFloat(document.getElementById('expense-value').value);
             const date = document.getElementById('expense-date').value;
-
+            
             if (name && !isNaN(value) && date) {
-                this.model.addExpense(name, value, date);
+                if (this.editingIndex !== null) {
+                    this.updateMovement('expense', name, value, date);
+                } else {
+                    this.model.addExpense(name, value, date);
+                }
                 this.updateView();
-                document.getElementById('expense-form').reset();
-                popup.style.display = 'none';
+                this.hideForm();
             }
         });
 
@@ -79,6 +82,57 @@ class FinancialController {
             }
         });
     }
+
+    showForm(type, movement = null) {
+        const popup = document.getElementById('popup-form');
+        document.getElementById('income-form').style.display = type === 'income' ? 'flex' : 'none';
+        document.getElementById('expense-form').style.display = type === 'expense' ? 'flex' : 'none';
+        popup.style.display = 'block';
+
+        if (movement) {
+            document.getElementById(`${type}-name`).value = movement.name;
+            document.getElementById(`${type}-value`).value = movement.value;
+            document.getElementById(`${type}-date`).value = movement.date.split(' ')[0];
+            this.editingIndex = movement.index;
+        } else {
+            this.editingIndex = null;
+        }
+    }
+
+    hideForm() {
+        document.getElementById('popup-form').style.display = 'none';
+        document.getElementById('income-form').reset();
+        document.getElementById('expense-form').reset();
+    }
+
+    updateMovement(type, name, value, date) {
+        const movements = this.getMovements();
+        const movement = movements[this.editingIndex];
+
+        if (type === 'income') {
+            const realIndex = this.model.incomes.findIndex(income => 
+                income.name === movement.name && 
+                income.value === movement.value && 
+                income.date === movement.date
+            );
+            if (realIndex !== -1) {
+                this.model.incomes[realIndex] = { name, value, date };
+                localStorage.setItem('incomes', JSON.stringify(this.model.incomes));
+            }
+        } else {
+            const realIndex = this.model.expenses.findIndex(expense => 
+                expense.name === movement.name && 
+                expense.value === movement.value && 
+                expense.date === movement.date
+            );
+            if (realIndex !== -1) {
+                this.model.expenses[realIndex] = { name, value, date };
+                localStorage.setItem('expenses', JSON.stringify(this.model.expenses));
+            }
+        }
+        this.editingIndex = null;
+    }
+    
     updateView() {
         this.model.updateBalance(); // Asegura que el balance se actualice en el modelo
         this.view.updateBalance(this.model.balance);
@@ -88,87 +142,70 @@ class FinancialController {
     getMovements() {
         let runningBalance = 0;
         const movements = [];
-
-        // Procesar ingresos en orden inverso
-        for (let i = this.model.incomes.length - 1; i >= 0; i--) {
-            const income = this.model.incomes[i];
-            runningBalance += income.value;
+    
+        // Combinar ingresos y egresos en un solo array
+        const allMovements = [
+            ...this.model.incomes.map(income => ({ ...income, type: 'income' })),
+            ...this.model.expenses.map(expense => ({ ...expense, type: 'expense' }))
+        ];
+    
+        // Ordenar por fecha y hora en orden descendente
+        allMovements.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+        // Procesar todos los movimientos ordenados
+        allMovements.forEach((movement, index) => {
+            if (movement.type === 'income') {
+                runningBalance += movement.value;
+            } else {
+                runningBalance -= movement.value;
+            }
+    
             movements.push({
-                name: income.name,
-                value: income.value,
+                name: movement.name,
+                value: movement.value,
                 remaining: runningBalance,
-                date: income.date,
-                type: 'income'
+                date: movement.date,
+                type: movement.type,
+                index // Añadimos el índice para referencia en la edición
             });
-        }
-
-        // Procesar egresos en orden inverso
-        for (let i = this.model.expenses.length - 1; i >= 0; i--) {
-            const expense = this.model.expenses[i];
-            runningBalance -= expense.value;
-            movements.push({
-                name: expense.name,
-                value: expense.value,
-                remaining: runningBalance,
-                date: expense.date,
-                type: 'expense'
-            });
-        }
-
-        return movements; // No es necesario invertir ya que procesamos en orden inverso
+        });
+    
+        return movements;
     }
 
     editMovement(index) {
-        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
+        const movements = this.getMovements();
         const movement = movements[index];
-
-        // Calcular el índice real en la lista original según el tipo de movimiento
-        if (movement.type === 'income') {
-            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
-            const newName = prompt("Edit name:", this.model.incomes[realIndex].name);
-            const newValue = parseFloat(prompt("Edit value:", this.model.incomes[realIndex].value));
-            const newDate = prompt("Edit date:", this.model.incomes[realIndex].date);
-
-            if (newName && !isNaN(newValue) && newDate) {
-                this.model.incomes[realIndex].name = newName;
-                this.model.incomes[realIndex].value = newValue;
-                this.model.incomes[realIndex].date = newDate;
-                localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
-            }
-        } else {
-            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
-            const newName = prompt("Edit name:", this.model.expenses[realIndex].name);
-            const newValue = parseFloat(prompt("Edit value:", this.model.expenses[realIndex].value));
-            const newDate = prompt("Edit date:", this.model.expenses[realIndex].date);
-
-            if (newName && !isNaN(newValue) && newDate) {
-                this.model.expenses[realIndex].name = newName;
-                this.model.expenses[realIndex].value = newValue;
-                this.model.expenses[realIndex].date = newDate;
-                localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
-            }
-        }
-        this.updateView(); // Actualizar la vista con los cambios realizados
+        this.showForm(movement.type, movement);
     }
-
+    
     deleteMovement(index) {
-        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
+        const movements = this.getMovements();
         const movement = movements[index];
-
-        // Calcular el índice real en la lista original según el tipo de movimiento
+    
         if (movement.type === 'income') {
-            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
-            this.model.incomes.splice(realIndex, 1);
-            localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
+            const realIndex = this.model.incomes.findIndex(income => 
+                income.name === movement.name && 
+                income.value === movement.value && 
+                income.date === movement.date
+            );
+            if (realIndex !== -1) {
+                this.model.incomes.splice(realIndex, 1);
+                localStorage.setItem('incomes', JSON.stringify(this.model.incomes));
+            }
         } else {
-            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
-            this.model.expenses.splice(realIndex, 1);
-            localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+            const realIndex = this.model.expenses.findIndex(expense => 
+                expense.name === movement.name && 
+                expense.value === movement.value && 
+                expense.date === movement.date
+            );
+            if (realIndex !== -1) {
+                this.model.expenses.splice(realIndex, 1);
+                localStorage.setItem('expenses', JSON.stringify(this.model.expenses));
+            }
         }
-
-        this.updateView(); // Actualizar la vista con los cambios realizados
+        this.updateView();
     }
-
 }
 
 // Inicializar la aplicación

@@ -46,7 +46,13 @@ class FinancialController {
             const date = document.getElementById('income-date').value;
 
             if (name && !isNaN(value) && date) {
-                this.model.addIncome(name, value, date);
+                // Obtener la hora actual del sistema
+                const currentTime = new Date().toLocaleTimeString('en-GB'); // Formato HH:MM:SS
+        
+                // Combinar la fecha y la hora
+                const dateTime = `${date} ${currentTime}`;
+        
+                this.model.addIncome(name, value, dateTime);
                 this.updateView();
                 document.getElementById('income-form').reset();
                 popup.style.display = 'none';
@@ -60,7 +66,13 @@ class FinancialController {
             const date = document.getElementById('expense-date').value;
 
             if (name && !isNaN(value) && date) {
-                this.model.addExpense(name, value, date);
+                // Obtener la hora actual del sistema
+                const currentTime = new Date().toLocaleTimeString('en-GB'); // Formato HH:MM:SS
+        
+                // Combinar la fecha y la hora
+                const dateTime = `${date} ${currentTime}`;
+        
+                this.model.addExpense(name, value, dateTime);
                 this.updateView();
                 document.getElementById('expense-form').reset();
                 popup.style.display = 'none';
@@ -89,88 +101,108 @@ class FinancialController {
     getMovements() {
         let runningBalance = parseFloat(localStorage.getItem('balance')) || 0;
         const movements = [];
-
-        // Procesar ingresos en orden inverso
-        for (let i = this.model.incomes.length - 1; i >= 0; i--) {
-            const income = this.model.incomes[i];
-            runningBalance += income.value;
+    
+        // Combinar ingresos y egresos en un solo array
+        const allMovements = [
+            ...this.model.incomes.map(income => ({ ...income, type: 'income' })),
+            ...this.model.expenses.map(expense => ({ ...expense, type: 'expense' }))
+        ];
+    
+        // Ordenar por fecha y hora en orden descendente
+        allMovements.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+        // Procesar todos los movimientos ordenados
+        allMovements.forEach(movement => {
+            if (movement.type === 'income') {
+                runningBalance += movement.value;
+            } else {
+                runningBalance -= movement.value;
+            }
+    
             movements.push({
-                name: income.name,
-                value: income.value,
+                name: movement.name,
+                value: movement.value,
                 remaining: runningBalance,
-                date: income.date,
-                type: 'income'
+                date: movement.date,
+                type: movement.type
             });
-        }
-
-        // Procesar egresos en orden inverso
-        for (let i = this.model.expenses.length - 1; i >= 0; i--) {
-            const expense = this.model.expenses[i];
-            runningBalance -= expense.value;
-            movements.push({
-                name: expense.name,
-                value: expense.value,
-                remaining: runningBalance,
-                date: expense.date,
-                type: 'expense'
-            });
-        }
-
-        return movements; // No es necesario invertir ya que procesamos en orden inverso
+        });
+    
+        return movements;
     }
 
     editMovement(index) {
-        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
+        const movements = this.getMovements();
         const movement = movements[index];
-
-        // Calcular el índice real en la lista original según el tipo de movimiento
+    
         if (movement.type === 'income') {
-            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
+            const realIndex = this.model.incomes.findIndex(income => 
+                income.name === movement.name && 
+                income.value === movement.value && 
+                income.date === movement.date
+            );
+    
             const newName = prompt("Edit name:", this.model.incomes[realIndex].name);
             const newValue = parseFloat(prompt("Edit value:", this.model.incomes[realIndex].value));
             const newDate = prompt("Edit date:", this.model.incomes[realIndex].date);
-
+    
             if (newName && !isNaN(newValue) && newDate) {
                 this.model.incomes[realIndex].name = newName;
                 this.model.incomes[realIndex].value = newValue;
                 this.model.incomes[realIndex].date = newDate;
-                localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
+                localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes));
             }
         } else {
-            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
+            const realIndex = this.model.expenses.findIndex(expense => 
+                expense.name === movement.name && 
+                expense.value === movement.value && 
+                expense.date === movement.date
+            );
+    
             const newName = prompt("Edit name:", this.model.expenses[realIndex].name);
             const newValue = parseFloat(prompt("Edit value:", this.model.expenses[realIndex].value));
             const newDate = prompt("Edit date:", this.model.expenses[realIndex].date);
-
+    
             if (newName && !isNaN(newValue) && newDate) {
                 this.model.expenses[realIndex].name = newName;
                 this.model.expenses[realIndex].value = newValue;
                 this.model.expenses[realIndex].date = newDate;
-                localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+                localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses));
             }
         }
-        this.updateView(); // Actualizar la vista con los cambios realizados
+        this.updateView();
     }
 
     deleteMovement(index) {
-        const movements = this.getMovements(); // Obtener movimientos en el orden correcto
+        const movements = this.getMovements();
         const movement = movements[index];
-
-        // Calcular el índice real en la lista original según el tipo de movimiento
+    
         if (movement.type === 'income') {
-            const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
-            this.model.incomes.splice(realIndex, 1);
-            localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
+            const realIndex = this.model.incomes.findIndex(income => 
+                income.name === movement.name && 
+                income.value === movement.value && 
+                income.date === movement.date
+            );
+    
+            if (realIndex !== -1) {
+                this.model.incomes.splice(realIndex, 1);
+                localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes));
+            }
         } else {
-            const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
-            this.model.expenses.splice(realIndex, 1);
-            localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+            const realIndex = this.model.expenses.findIndex(expense => 
+                expense.name === movement.name && 
+                expense.value === movement.value && 
+                expense.date === movement.date
+            );
+    
+            if (realIndex !== -1) {
+                this.model.expenses.splice(realIndex, 1);
+                localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses));
+            }
         }
-
-        this.updateView(); // Actualizar la vista con los cambios realizados
+        this.updateView();
     }
 
 }
 
-// Inicializar la aplicación
 new FinancialController(new FinancialModel(), new FinancialView());

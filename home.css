@@ -94,13 +94,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 28px;
+    margin-top: 30px;
+    font-family: 'Now-Bold'
     
 }
 
 .nav-menu {
     list-style: none;
     width: 100%;
+    margin-top: 22px;
 }
 
 .nav-menu li {
@@ -248,8 +250,7 @@ body {
 
 
 .btn-amount {
-    font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     background-image: url('Imagenes/balance.png'); 
     background-size: cover;
     padding: 22px 24px;
@@ -259,6 +260,8 @@ body {
     border-radius: 10px;
     width: 330px;
     height: 120px;
+    color: #1b1b1b;
+    font-family: 'NowAlt-Bold'
 }
 
 form {
@@ -283,7 +286,7 @@ form input[type="date"] {
 
 form button[type="submit_outcome"] {
     padding: 12px;
-    background-color: #fdd7a0;
+    background-color: #eba646;
     color: white;
     border: none;
     border-radius: 5px;
@@ -295,11 +298,11 @@ form button[type="submit_outcome"] {
 }
 
 form button[type="submit_outcome"]:hover {
-    background-color: #fdd7a0;
+    background-color: #e79e37;
 }
 form button[type="submit_income"] {
     padding: 12px;
-    background-color: #b0d0c1;
+    background-color: #4cb182;
     color: white;
     border: none;
     border-radius: 5px;
@@ -308,11 +311,10 @@ form button[type="submit_income"] {
     margin-top: 10px;
     align-self: center;
     width: 45%;
-    
 }
 
 form button[type="submit_income"]:hover {
-    background-color: #45a049;
+    background-color: #3ba071;
     
 }
 
