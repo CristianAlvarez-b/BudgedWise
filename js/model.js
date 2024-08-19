@@ -23,6 +23,7 @@ class FinancialModel {
         this.totalIncome = this.incomes.reduce((total, income) => total + income.value, 0);
         this.totalExpense = this.expenses.reduce((total, expense) => total + expense.value, 0);
         this.balance = this.totalIncome - this.totalExpense;
+        localStorage.setItem('balance', JSON.stringify(this.balance));
     }
 
     getMovements() {

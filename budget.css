@@ -141,50 +141,70 @@ body {
 
 .amount-section {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 20px;
+    gap: 25%;
     border-radius: 10px;
 }
-.amount {
-    background-color: #e0f7fa;
+.button_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25%;
+    padding: 20px;
+    border-radius: 10px;
 }
 .amount-section .amount h2 {
     font-size: 28px;
     color: #333;
 }
+.amount-section .Budgeting h2{
+    font-size: 28px;
+    color: #333;
 
+}
 .buttons {
     display: flex;
+    justify-content: center;
     gap: 10px;
-    margin-right: 80px;
 }
-
+.div_buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Alinear verticalmente */
+    text-align: center; /* Alinear el texto del h3 */
+}
+.div_buttons h3 {
+    font-size: 15px;
+    font-weight: lighter;
+    color: #444;
+}
 .btn-add-income {
-    background-color: #b0d0c1;
-    color: #333;
+    background-color: #1b1b1b;
+    color: #f5f5f5;
     border: none;
-    padding: 10px 20px;
-    border-radius: 15px;
+    border-radius: 50%;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    width: 150px;
+    width: 25px;
+    height: 26px;
 }
 
 .btn-add-income:hover {
     background-color: #b0d0c1;
 }
 .btn-add-expense {
-    background-color: #fdd7a0;
-    color: #333;
+    background-color: #1b1b1b;
     border: none;
-    padding: 10px 20px;
-    border-radius: 15px;
+    color: #f5f5f5;
+    border-radius: 50%;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    width: 150px;
+    width: 25px;
+    height: 26px;
 }
 
 .btn-add-expense:hover {
@@ -249,18 +269,38 @@ body {
 
 .btn-amount {
     font-weight: bold;
-    font-size: 18px;
-    background-image: url('Imagenes/balance.png'); 
+    font-size: 25px;
+    background-color: #cfeee0;
     background-size: cover;
-    padding: 22px 24px;
     text-align: center;
     display: flex;
     border: none;
     border-radius: 10px;
     width: 330px;
-    height: 120px;
+    height: 90px;
+    align-items: center;
+    justify-content: center;
 }
-
+.btn-budget {
+    font-weight: bold;
+    font-size: 25px;
+    background-color: #f7d6af;
+    background-size: cover;
+    text-align: center;
+    display: flex;
+    border: none;
+    border-radius: 10px;
+    width: 330px;
+    height: 90px; 
+    align-items: center;
+    justify-content: center;
+}
+.fantasma {
+    width: 330px;
+    height: 1px;
+    border: none;
+    background-color: #f5f5f5;
+}
 form {
     display: flex;
     flex-direction: column;
@@ -290,8 +330,6 @@ form button[type="submit_outcome"] {
     cursor: pointer;
     font-size: 16px;
     margin-top: 10px;
-    align-self: center;
-    width: 45%;
 }
 
 form button[type="submit_outcome"]:hover {
@@ -308,7 +346,6 @@ form button[type="submit_income"] {
     margin-top: 10px;
     align-self: center;
     width: 45%;
-    
 }
 
 form button[type="submit_income"]:hover {

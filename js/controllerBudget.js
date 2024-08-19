@@ -1,5 +1,5 @@
-import FinancialModel from './model.js';
-import FinancialView from './view.js';
+import FinancialModel from './modelBudget.js';
+import FinancialView from './viewBudget.js';
 
 class FinancialController {
     constructor(model, view) {
@@ -73,12 +73,13 @@ class FinancialController {
     
     initLocalStorageListener() {
         window.addEventListener('storage', (event) => {
-            if (event.key === 'balance') {
-                this.model.balance = parseFloat(event.newValue) || 0;
+            if (event.key === 'TempBalance') {
+                this.model.balance = JSON.parse(event.newValue);
                 this.updateView();
             }
         });
     }
+
     updateView() {
         this.model.updateBalance(); // Asegura que el balance se actualice en el modelo
         this.view.updateBalance(this.model.balance);
@@ -86,7 +87,7 @@ class FinancialController {
     }
 
     getMovements() {
-        let runningBalance = 0;
+        let runningBalance = parseFloat(localStorage.getItem('balance')) || 0;
         const movements = [];
 
         // Procesar ingresos en orden inverso
@@ -133,7 +134,7 @@ class FinancialController {
                 this.model.incomes[realIndex].name = newName;
                 this.model.incomes[realIndex].value = newValue;
                 this.model.incomes[realIndex].date = newDate;
-                localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
+                localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
             }
         } else {
             const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
@@ -145,7 +146,7 @@ class FinancialController {
                 this.model.expenses[realIndex].name = newName;
                 this.model.expenses[realIndex].value = newValue;
                 this.model.expenses[realIndex].date = newDate;
-                localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+                localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
             }
         }
         this.updateView(); // Actualizar la vista con los cambios realizados
@@ -159,11 +160,11 @@ class FinancialController {
         if (movement.type === 'income') {
             const realIndex = this.model.incomes.length - 1 - index; // Ajustar para la lista de ingresos
             this.model.incomes.splice(realIndex, 1);
-            localStorage.setItem('incomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
+            localStorage.setItem('tempIncomes', JSON.stringify(this.model.incomes)); // Actualizar localStorage
         } else {
             const realIndex = this.model.expenses.length - 1 - (index - this.model.incomes.length); // Ajustar para la lista de gastos
             this.model.expenses.splice(realIndex, 1);
-            localStorage.setItem('expenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
+            localStorage.setItem('tempExpenses', JSON.stringify(this.model.expenses)); // Actualizar localStorage
         }
 
         this.updateView(); // Actualizar la vista con los cambios realizados
