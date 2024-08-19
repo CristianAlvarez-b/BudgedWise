@@ -5,7 +5,7 @@ class FinancialController {
     constructor(model, view) {
         this.model = model;
         this.view = view;
-        this.editingIndex = null; // Para rastrear el índice del movimiento que se está editando
+        this.editingIndex = null; 
 
         this.view.updateBalance(this.model.balance);
         this.view.updateMovements(this.getMovements());
@@ -145,18 +145,17 @@ class FinancialController {
     
         // Combinar ingresos y egresos en un solo array
         const allMovements = [
-            ...this.model.incomes.map(income => ({ ...income, type: 'income' })),
-            ...this.model.expenses.map(expense => ({ ...expense, type: 'expense' }))
+            ...this.model.incomes.map(income => ({ ...income, type: income.type || 'income' })),
+            ...this.model.expenses.map(expense => ({ ...expense, type: expense.type || 'expense' }))
         ];
-    
         // Ordenar por fecha y hora en orden descendente
-        allMovements.sort((a, b) => new Date(b.date) - new Date(a.date));
+        allMovements.sort((a, b) => new Date(a.date) - new Date(b.date));
     
         // Procesar todos los movimientos ordenados
-        allMovements.forEach((movement, index) => {
-            if (movement.type === 'income') {
+        allMovements.forEach(movement => {
+            if (movement.type === 'income' || movement.type === 'pocketIncome') {
                 runningBalance += movement.value;
-            } else {
+            } else if (movement.type === 'expense' || movement.type === 'pocketOutcome') {
                 runningBalance -= movement.value;
             }
     
@@ -165,14 +164,13 @@ class FinancialController {
                 value: movement.value,
                 remaining: runningBalance,
                 date: movement.date,
-                type: movement.type,
-                index // Añadimos el índice para referencia en la edición
+                type: movement.type
             });
         });
     
         return movements;
     }
-
+    
     editMovement(index) {
         const movements = this.getMovements();
         const movement = movements[index];

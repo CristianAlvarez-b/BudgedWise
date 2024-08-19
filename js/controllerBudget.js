@@ -46,10 +46,7 @@ class FinancialController {
             const date = document.getElementById('income-date').value;
 
             if (name && !isNaN(value) && date) {
-                // Obtener la hora actual del sistema
-                const currentTime = new Date().toLocaleTimeString('en-GB'); // Formato HH:MM:SS
-        
-                // Combinar la fecha y la hora
+                const currentTime = new Date().toLocaleTimeString('en-GB'); 
                 const dateTime = `${date} ${currentTime}`;
         
                 this.model.addIncome(name, value, dateTime);
@@ -66,10 +63,7 @@ class FinancialController {
             const date = document.getElementById('expense-date').value;
 
             if (name && !isNaN(value) && date) {
-                // Obtener la hora actual del sistema
-                const currentTime = new Date().toLocaleTimeString('en-GB'); // Formato HH:MM:SS
-        
-                // Combinar la fecha y la hora
+                const currentTime = new Date().toLocaleTimeString('en-GB'); 
                 const dateTime = `${date} ${currentTime}`;
         
                 this.model.addExpense(name, value, dateTime);
@@ -93,7 +87,7 @@ class FinancialController {
     }
 
     updateView() {
-        this.model.updateBalance(); // Asegura que el balance se actualice en el modelo
+        this.model.updateBalance(); 
         this.view.updateBalance(this.model.balance);
         this.view.updateMovements(this.getMovements());
     }
