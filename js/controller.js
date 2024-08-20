@@ -5,7 +5,7 @@ class FinancialController {
     constructor(model, view) {
         this.model = model;
         this.view = view;
-        this.editingIndex = null; 
+        this.editingIndex = null;
 
         this.view.updateBalance(this.model.balance);
         this.view.updateMovements(this.getMovements());
@@ -27,12 +27,12 @@ class FinancialController {
         });
 
         closePopup.addEventListener('click', () => {
-            popup.style.display = 'none';
+            this.hideForm();
         });
 
         window.addEventListener('click', (event) => {
             if (event.target === popup) {
-                popup.style.display = 'none';
+                this.hideForm();
             }
         });
 
@@ -41,12 +41,13 @@ class FinancialController {
             const name = document.getElementById('income-name').value;
             const value = parseFloat(document.getElementById('income-value').value);
             const date = document.getElementById('income-date').value;
-        
+            const currentTime = new Date().toLocaleTimeString('en-GB'); 
+            const dateTime = `${date} ${currentTime}`;
             if (name && !isNaN(value) && date) {
                 if (this.editingIndex !== null) {
-                    this.updateMovement('income', name, value, date);
+                    this.updateMovement('income', name, value, dateTime);
                 } else {
-                    this.model.addIncome(name, value, date);
+                    this.model.addIncome(name, value, dateTime);
                 }
                 this.updateView();
                 this.hideForm();
@@ -58,12 +59,13 @@ class FinancialController {
             const name = document.getElementById('expense-name').value;
             const value = parseFloat(document.getElementById('expense-value').value);
             const date = document.getElementById('expense-date').value;
-            
+            const currentTime = new Date().toLocaleTimeString('en-GB'); 
+            const dateTime = `${date} ${currentTime}`;
             if (name && !isNaN(value) && date) {
                 if (this.editingIndex !== null) {
-                    this.updateMovement('expense', name, value, date);
+                    this.updateMovement('expense', name, value, dateTime);
                 } else {
-                    this.model.addExpense(name, value, date);
+                    this.model.addExpense(name, value, dateTime);
                 }
                 this.updateView();
                 this.hideForm();
@@ -73,7 +75,7 @@ class FinancialController {
         this.view.setEditHandler(this.editMovement.bind(this));
         this.view.setDeleteHandler(this.deleteMovement.bind(this));
     }
-    
+
     initLocalStorageListener() {
         window.addEventListener('storage', (event) => {
             if (event.key === 'balance') {
@@ -110,19 +112,19 @@ class FinancialController {
         const movement = movements[this.editingIndex];
 
         if (type === 'income') {
-            const realIndex = this.model.incomes.findIndex(income => 
-                income.name === movement.name && 
-                income.value === movement.value && 
+            const realIndex = this.model.incomes.findIndex(income =>
+                income.name === movement.name &&
+                income.value === movement.value &&
                 income.date === movement.date
             );
             if (realIndex !== -1) {
                 this.model.incomes[realIndex] = { name, value, date };
                 localStorage.setItem('incomes', JSON.stringify(this.model.incomes));
             }
-        } else {
-            const realIndex = this.model.expenses.findIndex(expense => 
-                expense.name === movement.name && 
-                expense.value === movement.value && 
+        } else if (type === 'expense') {
+            const realIndex = this.model.expenses.findIndex(expense =>
+                expense.name === movement.name &&
+                expense.value === movement.value &&
                 expense.date === movement.date
             );
             if (realIndex !== -1) {
@@ -132,7 +134,7 @@ class FinancialController {
         }
         this.editingIndex = null;
     }
-    
+
     updateView() {
         this.model.updateBalance(); // Asegura que el balance se actualice en el modelo
         this.view.updateBalance(this.model.balance);
@@ -140,17 +142,19 @@ class FinancialController {
     }
 
     getMovements() {
-        let runningBalance = 0;
+        let runningBalance = 0; // Comienza con el balance inicial
         const movements = [];
-    
+
         // Combinar ingresos y egresos en un solo array
         const allMovements = [
-            ...this.model.incomes.map(income => ({ ...income, type: income.type || 'income' })),
-            ...this.model.expenses.map(expense => ({ ...expense, type: expense.type || 'expense' }))
+            ...this.model.incomes.map((income, index) => ({ ...income, type: income.type || 'income', index })),
+            ...this.model.expenses.map((expense, index) => ({ ...expense, type: expense.type ||'expense', index }))
         ];
+
+
         // Ordenar por fecha y hora en orden descendente
         allMovements.sort((a, b) => new Date(a.date) - new Date(b.date));
-    
+
         // Procesar todos los movimientos ordenados
         allMovements.forEach(movement => {
             if (movement.type === 'income' || movement.type === 'pocketIncome') {
@@ -158,7 +162,7 @@ class FinancialController {
             } else if (movement.type === 'expense' || movement.type === 'pocketOutcome') {
                 runningBalance -= movement.value;
             }
-    
+
             movements.push({
                 name: movement.name,
                 value: movement.value,
@@ -167,34 +171,34 @@ class FinancialController {
                 type: movement.type
             });
         });
-    
+
         return movements;
     }
-    
+
     editMovement(index) {
         const movements = this.getMovements();
         const movement = movements[index];
-        this.showForm(movement.type, movement);
+        this.showForm(movement.type, { ...movement, index });
     }
-    
+
     deleteMovement(index) {
         const movements = this.getMovements();
         const movement = movements[index];
-    
+
         if (movement.type === 'income') {
-            const realIndex = this.model.incomes.findIndex(income => 
-                income.name === movement.name && 
-                income.value === movement.value && 
+            const realIndex = this.model.incomes.findIndex(income =>
+                income.name === movement.name &&
+                income.value === movement.value &&
                 income.date === movement.date
             );
             if (realIndex !== -1) {
                 this.model.incomes.splice(realIndex, 1);
                 localStorage.setItem('incomes', JSON.stringify(this.model.incomes));
             }
-        } else {
-            const realIndex = this.model.expenses.findIndex(expense => 
-                expense.name === movement.name && 
-                expense.value === movement.value && 
+        } else if (movement.type === 'expense') {
+            const realIndex = this.model.expenses.findIndex(expense =>
+                expense.name === movement.name &&
+                expense.value === movement.value &&
                 expense.date === movement.date
             );
             if (realIndex !== -1) {

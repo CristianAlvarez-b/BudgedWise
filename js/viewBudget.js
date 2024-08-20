@@ -14,15 +14,13 @@ class FinancialView {
 
     updateMovements(movements) {
         this.movementsTableBody.innerHTML = '';
-    
+
         movements.forEach(movement => {
             const row = document.createElement('tr');
             const iconSrc = movement.type === 'income' ? 'Imagenes/arriba.png' : 'Imagenes/abajo.png'; // Ruta de las imágenes
             const iconAlt = movement.type === 'income' ? 'Ingreso' : 'Egreso';
-    
-            // Tomar solo la parte de la fecha, sin la hora
+
             const dateOnly = movement.date.split(' ')[0];
-    
             row.innerHTML = `
                 <td class="icon-cell">
                     <img src="${iconSrc}" alt="${iconAlt}" class="icon-img">
@@ -59,23 +57,22 @@ class FinancialView {
         this.movementsTableBody.addEventListener('click', event => {
             if (event.target.closest('.delete-btn')) {
                 const rowIndex = Array.from(this.movementsTableBody.children).indexOf(event.target.closest('tr'));
+                // Calcular el índice real en el modelo
                 const realIndex = this.movementsTableBody.children.length - rowIndex - 1;
-
-                // Mostrar alerta de confirmación
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
+                    title: '¿Are you sure?',
+                    text: "¡You won't be able to reverse this!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#5296be',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
+                    confirmButtonText: 'Yes, delete!',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         handler(realIndex);
                         Swal.fire(
-                            'Deleted!',
-                            'Your movement has been deleted.',
+                            '¡Deleted!',
+                            'Movement deleted.',
                             'success'
                         );
                     }
